@@ -415,33 +415,35 @@ cart.push({
 
 
 document.addEventListener("DOMContentLoaded", () => {
+  const cart = JSON.parse(localStorage.getItem("checkout_cart")) || [];
+  const cartField = document.getElementById("cart-data");
   const form = document.getElementById("order-form");
-  const cartData = document.getElementById("cart-data");
 
-  if (!form) return;
+  if (!form || !cartField) return;
 
-  form.addEventListener("submit", (e) => {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  form.addEventListener("submit", () => {
+    let text = "";
 
-    if (cart.length === 0) {
-      e.preventDefault();
-      alert("Кошик порожній");
-      return;
-    }
-
-    let list = cart.map(item => {
-      if (item.items) {
-        return `HeartBox (4 шт): ${item.items.join(", ")}`;
+    cart.forEach(item => {
+      // Якщо це HeartBox — виводимо склад
+      if (item.name === "HeartBox") {
+        text += `HeartBox (4 шт)\n`;
+        text += `Склад: ${item.items.join(", ")}\n`;
+        text += `Ціна: ${item.price} грн × ${item.qty}\n\n`;
+      } else {
+        // Звичайне печиво
+        text += `${item.name} — ${item.qty} шт × ${item.price} грн = ${item.qty * item.price} грн\n`;
       }
-      return `${item.name} × ${item.qty} = ${item.qty * item.price} грн`;
-    }).join("\n");
+    });
 
-    let total = cart.reduce((s, i) => s + i.qty * i.price, 0);
+    const total = cart.reduce((sum, it) => sum + it.price * it.qty, 0);
+    text += `\nЗагальна сума: ${total} грн`;
 
-    cartData.value = list + `\n\nЗагальна сума: ${total} грн`;
+    cartField.value = text;
 
-    // Дати FormSubmit час зчитати дані
-    setTimeout(() => localStorage.removeItem("cart"), 50);
+    // очищення
+    localStorage.removeItem("checkout_cart");
+    localStorage.removeItem("cart");
   });
 });
 

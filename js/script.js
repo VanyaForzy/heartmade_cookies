@@ -415,36 +415,47 @@ cart.push({
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  const cart = JSON.parse(localStorage.getItem("checkout_cart")) || [];
-  const cartField = document.getElementById("cart-data");
-  const form = document.getElementById("order-form");
 
-  if (!form || !cartField) return;
+  const cart = JSON.parse(localStorage.getItem("checkout_cart")) || [];
+  const form = document.getElementById("order-form");
+  const cartField = document.getElementById("cart-data");
+
+  if (!form) return;
 
   form.addEventListener("submit", () => {
-    let text = "";
+
+    let output = "";
 
     cart.forEach(item => {
-      // Якщо це HeartBox — виводимо склад
-      if (item.name === "HeartBox") {
-        text += `HeartBox (4 шт)\n`;
-        text += `Склад: ${item.items.join(", ")}\n`;
-        text += `Ціна: ${item.price} грн × ${item.qty}\n\n`;
-      } else {
-        // Звичайне печиво
-        text += `${item.name} — ${item.qty} шт × ${item.price} грн = ${item.qty * item.price} грн\n`;
+
+      // === Якщо це HeartBox ===
+      if (item.name === "HeartBox" && Array.isArray(item.items)) {
+        output += `HeartBox (4 шт)\n`;
+        output += `Склад: ${item.items.join(", ")}\n`;
+        output += `Ціна: ${item.price} грн × ${item.qty}\n\n`;
       }
+
+      // === Якщо звичайне печиво ===
+      else {
+        output += `${item.name} — ${item.qty} шт × ${item.price} грн = ${item.qty * item.price} грн\n`;
+      }
+
     });
 
-    const total = cart.reduce((sum, it) => sum + it.price * it.qty, 0);
-    text += `\nЗагальна сума: ${total} грн`;
+    // Підрахунок суми
+    const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    output += `\nЗагальна сума: ${total} грн`;
 
-    cartField.value = text;
+    // Записуємо в приховане поле форми
+    cartField.value = output;
 
-    // очищення
-    localStorage.removeItem("checkout_cart");
-    localStorage.removeItem("cart");
+    // Очистити кошики
+    setTimeout(() => {
+      localStorage.removeItem("cart");
+      localStorage.removeItem("checkout_cart");
+    }, 300);
   });
+
 });
 
 

@@ -24,10 +24,14 @@
 
   <div id="order-cart"></div>
 
+  <!-- ФОРМА -->
   <form id="order-form" action="https://formsubmit.co/ivan.fedoryshyn09@gmail.com" method="POST">
 
     <input type="hidden" name="_subject" value="Нове замовлення з HeartMade Cookies!">
     <input type="hidden" name="_captcha" value="false">
+
+    <!-- ПОЛЕ КУДИ ЗАПИШЕМО КОШИК -->
+    <input type="hidden" name="cart_data" id="cart-data">
 
     <label>Ім’я:
       <input type="text" name="name" required>
@@ -37,18 +41,14 @@
       <input type="tel" name="phone" placeholder="+380" required>
     </label>
 
-    <label>Адреса (залиште порожнім для самовивозу):
+    <label>Адреса (якщо самовивіз — залиште пустим):
       <input type="text" name="address">
     </label>
-
-    <!-- СЮДИ ЗАПИШЕТЬСЯ СКЛАД ЗАМОВЛЕННЯ -->
-    <input type="hidden" name="cart_data" id="cart-data">
 
     <button type="submit" class="btn">Підтвердити замовлення</button>
   </form>
 
   <p id="order-result"></p>
-
 </section>
 
 <footer>
@@ -58,53 +58,52 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  const orderCartContainer = document.getElementById("order-cart");
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  let total = 0;
-
-  if (cart.length === 0) {
-    orderCartContainer.innerHTML = "<p>Ваш кошик порожній 😢</p>";
-  } else {
-    cart.forEach(item => {
-      const div = document.createElement("div");
-      div.classList.add("cart-item");
-      div.innerHTML = `
-        <h3>${item.name}</h3>
-        <p>${item.price} грн × ${item.qty}</p>
-      `;
-      orderCartContainer.appendChild(div);
-      total += item.price * item.qty;
-    });
-
-    const totalDiv = document.createElement("div");
-    totalDiv.innerHTML = `<strong>Загальна сума: ${total} грн</strong>`;
-    orderCartContainer.appendChild(totalDiv);
-  }
-
-  const form = document.getElementById("order-form");
+  const orderCart = document.getElementById("order-cart");
   const cartField = document.getElementById("cart-data");
 
-  form.addEventListener("submit", () => {
+  let total = 0;
 
-    let list = cart.map(item => {
+  // Показуємо замовлення на сторінці
+  if (cart.length === 0) {
+    orderCart.innerHTML = "<p>Ваш кошик порожній 😢</p>";
+  } else {
+    cart.forEach(item => {
+      total += item.price * item.qty;
+
+      orderCart.innerHTML += `
+        <div class="cart-item">
+          <h3>${item.name}</h3>
+          <p>${item.price} грн × ${item.qty}</p>
+        </div>
+      `;
+    });
+
+    orderCart.innerHTML += `<h3>Загальна сума: ${total} грн</h3>`;
+  }
+
+  // Перед відправкою форми — вписуємо склад
+  document.getElementById("order-form").addEventListener("submit", () => {
+
+    const formatted = cart.map(item => {
       if (item.items) {
-        return `HeartBox (4 шт): ${item.items.join(", ")}`;
+        return `HeartBox: ${item.items.join(", ")}`;
       }
       return `${item.name} × ${item.qty} = ${item.qty * item.price} грн`;
     }).join("\n");
 
-    cartField.value = list + `\n\nЗагальна сума: ${total} грн`;
+    cartField.value = `${formatted}\n\nЗагальна сума: ${total} грн`;
 
-    // Після успішного надсилання очищатиметься автоматично
+    // очищаємо кошик після відправки
     setTimeout(() => {
       localStorage.removeItem("cart");
       localStorage.removeItem("checkout_cart");
     }, 500);
+
   });
 
 });
 </script>
-<script src="js/script.js"></script>
+
 </body>
 </html>
-

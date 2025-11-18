@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Оформлення замовлення — HeartMade Cookies</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>🍪 HeartMade Cookies</h1>
+    <nav>
+      <a href="index.html">Головна</a>
+      <a href="catalog.html">Каталог</a>
+      <a href="about.html">Про нас</a>
+      <a href="contact.html">Контакти</a>
+      <a href="cart.html">🛒 Кошик</a>
+    </nav>
+  </header>
+
+  <section class="order-section">
+    <h2>Оформлення замовлення</h2>
+    <div id="order-cart"></div>
+
+    <form action="https://formsubmit.co/ivan.fedoryshyn09@gmail.com" method="POST">
+      <label>Ім’я:
+        <input type="text" name="name" required>
+      </label>
+      <label>Телефон:
+        <input type="tel" name="phone" placeholder="+380">
+      </label>
+      <label>Адреса (якщо самовивіз, залиште порожнім)
+        <input type="text" name="address" placeholder="Тільки в Надвірній">
+      </label>
+      <button type="submit" class="btn">Підтвердити замовлення</button>
+    </form>
+    <p id="order-result"></p>
+  </section>
+
+  <footer>
+    <p>© 2025 HeartMade Cookies | З любов’ю зроблено вдома 💛</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const orderCartContainer = document.getElementById("order-cart");
+      const cart = JSON.parse(localStorage.getItem("checkout_cart")) || [];
+      let total = 0;
+
+      if (cart.length === 0) {
+        orderCartContainer.innerHTML = "<p>Ваш кошик порожній 😢</p>";
+      } else {
+        cart.forEach(item => {
+          const div = document.createElement("div");
+          div.classList.add("cart-item");
+          div.innerHTML = `
+            <h3>${item.name}</h3>
+            <p>${item.price} грн × ${item.qty}</p>
+          `;
+          orderCartContainer.appendChild(div);
+          total += item.price * item.qty;
+        });
+        const totalDiv = document.createElement("div");
+        totalDiv.innerHTML = `<strong>Загальна сума: ${total} грн</strong>`;
+        orderCartContainer.appendChild(totalDiv);
+      }
+
+      const orderForm = document.getElementById("order-form");
+      if (orderForm) {
+        orderForm.addEventListener("submit", e => {
+          e.preventDefault();
+          const data = new FormData(orderForm);
+          const name = data.get("name");
+          const phone = data.get("phone");
+          const address = data.get("address") || "Самовивіз";
+
+          if (cart.length === 0) {
+            alert("Кошик порожній!");
+            return;
+          }
+
+          // Показати повідомлення про успіх
+          document.getElementById("order-result").innerHTML = `
+            <strong>Дякуємо, ${name}!</strong><br>
+            Ми отримали ваше замовлення на суму ${total} грн.<br>
+            Телефон: ${phone}<br>
+            Адреса: ${address}
+          `;
+
+          // Очистити кошик
+          localStorage.removeItem("checkout_cart");
+          localStorage.removeItem("cart");
+          renderCart(); // якщо повернутися на cart.html, кошик буде порожнім
+          orderForm.reset();
+        });
+      }
+    });
+  </script>
+</body>
+</html>

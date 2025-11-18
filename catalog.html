@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Каталог — HeartMade Cookies</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1 class="logo">🍪 HeartMade Cookies</h1>
+      <nav class="nav">
+        <a href="index.html">Головна</a>
+        <a href="catalog.html" class="active">Каталог</a>
+        <a href="about.html">Про нас</a>
+        <a href="contact.html">Контакти</a>
+        <a href="cart.html" class="cart-btn">🛒 Кошик</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="catalog-section fade-in">
+    <h2>Каталог печива</h2>
+    <div class="divider"></div>
+    <div class="catalog-grid">
+      <div class="catalog-item">
+        <img src="images/classic.jpg" alt="Класичне">
+        <h3>Класичне</h3>
+        <p class="price">60 грн</p>
+        <button class="details-btn">Детальніше</button>
+        <p class="details-text">Десерт з карамельною основою й насиченим шоколадним смаком</p>
+        <button class="add-to-cart">Додати у кошик</button>
+      </div>
+
+      <div class="catalog-item">
+        <img src="images/oreo.jpg" alt="Орео">
+        <h3>Орео</h3>
+        <p class="price">60 грн</p>
+        <button class="details-btn">Детальніше</button>
+        <p class="details-text">Десерт з хрумкою основою і м'яким сирковим кремом ззовні.</p>
+        <button class="add-to-cart">Додати у кошик</button>
+      </div>
+
+      <div class="catalog-item">
+        <img src="images/red.jpg" alt="Red coconut">
+        <h3>Red coconut</h3>
+        <p class="price">60 грн</p>
+        <button class="details-btn">Детальніше</button>
+        <p class="details-text">Десерт насиченим кокосовим кремом і ніжною текстурою всередині</p>
+        <button class="add-to-cart">Додати у кошик</button>
+      </div>
+
+      <div class="catalog-item">
+        <img src="images/choco.jpg" alt="Шоколадне">
+        <h3>Шоколадне</h3>
+        <p class="price">60 грн</p>
+        <button class="details-btn">Детальніше</button>
+        <p class="details-text">Десерт з ніжним сирковим кремом всередині і основою з чорного шоколаду</p>
+        <button class="add-to-cart">Додати у кошик</button>
+      </div>
+
+    <div class="catalog-item heartbox last-row">
+    <img src="images/box.jpg" alt="HeartBox">
+    <h3>HeartBox (4 шт)</h3>
+    <p class="price">220 грн</p>
+    <button class="details-btn">Детальніше</button>
+    <p class="details-text">Суперпропозиція-плати менше, а отримуй більше, обери 4 любих печива з каталогу</p>
+    <button class="heartbox-btn">Зібрати HeartBox</button>
+</div>
+</div>
+    </div>
+  </section>
+
+  <div id="heartbox-modal" class="modal">
+  <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Збери свій HeartBox</h2>
+      <p class="counter">Вибрано: <span id="selected-count">0</span>/4</p>
+
+      <div class="modal-grid" id="modal-cookie-list">
+          <!-- JS підставить всі печива -->
+      </div>
+
+      <button id="confirm-heartbox" disabled class="confirm-btn">
+        Додати до кошика
+      </button>
+  </div>
+</div>
+
+  <footer class="site-footer">
+    <p>© 2025 HeartMade Cookies | З любов’ю зроблено вдома 💛</p>
+  </footer>
+
+  
+
+  <script>
+// Показ/приховування опису
+document.querySelectorAll(".details-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const parent = btn.closest(".catalog-item");
+        const text = parent.querySelector(".details-text");
+        text.classList.toggle("show");
+    });
+});
+</script>
+<script src="js/script.js"></script>
+</body>
+</html>

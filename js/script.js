@@ -415,41 +415,33 @@ cart.push({
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  const orderForm = document.getElementById("order-form");
-  const cartDataInput = document.getElementById("cart-data");
+  const form = document.getElementById("order-form");
+  const cartData = document.getElementById("cart-data");
 
-  if (!orderForm) return;
+  if (!form) return;
 
-  // Перед відправкою форми — генеруємо склад замовлення
-  orderForm.addEventListener("submit", function (e) {
-
+  form.addEventListener("submit", (e) => {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     if (cart.length === 0) {
       e.preventDefault();
-      document.getElementById("order-result").textContent =
-        "Кошик порожній — додайте товари!";
+      alert("Кошик порожній");
       return;
     }
 
-    // Формуємо текст складу замовлення
-    let cartList = cart
-      .map(item => {
-        if (item.items) {
-          return `HeartBox (4 шт): ${item.items.join(", ")}`;
-        }
-        return `${item.name} × ${item.qty} = ${item.qty * item.price} грн`;
-      })
-      .join("\n");
+    let list = cart.map(item => {
+      if (item.items) {
+        return `HeartBox (4 шт): ${item.items.join(", ")}`;
+      }
+      return `${item.name} × ${item.qty} = ${item.qty * item.price} грн`;
+    }).join("\n");
 
     let total = cart.reduce((s, i) => s + i.qty * i.price, 0);
 
-    // Вписуємо в приховане поле для FormSubmit
-    cartDataInput.value =
-      cartList + `\n\nЗагальна сума: ${total} грн`;
+    cartData.value = list + `\n\nЗагальна сума: ${total} грн`;
 
-    // І ТІЛЬКИ ТОДІ форма може відправлятися
-    localStorage.removeItem("cart");
+    // Дати FormSubmit час зчитати дані
+    setTimeout(() => localStorage.removeItem("cart"), 50);
   });
 });
 

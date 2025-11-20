@@ -113,6 +113,19 @@ cart.forEach(item => {
 
     cartField.value = `${formatted}\n\nЗагальна сума: ${total} грн`;
 
+    const allOrders = JSON.parse(localStorage.getItem("ALL_ORDERS")) || [];
+
+allOrders.push({
+  name: document.querySelector("input[name='name']").value,
+  phone: document.querySelector("input[name='phone']").value,
+  address: document.querySelector("input[name='address']").value || "Самовивіз",
+  items: cart,
+  total: total,
+  date: new Date().toLocaleString()
+});
+
+localStorage.setItem("ALL_ORDERS", JSON.stringify(allOrders));
+
     // Очищення після відправлення
     setTimeout(() => {
       localStorage.removeItem("cart");
@@ -126,6 +139,7 @@ cart.forEach(item => {
 
 </body>
 </html>
+
 
 
 

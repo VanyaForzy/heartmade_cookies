@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Мої замовлення — HeartMade Cookies</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header>
+  <h1>🍪 HeartMade Cookies</h1>
+  <nav>
+    <a href="index.html">Головна</a>
+    <a href="catalog.html">Каталог</a>
+    <a href="my-orders.html" class="active">Мої замовлення</a>
+  </nav>
+</header>
+
+<section class="orders-section">
+  <h2>📦 Мої замовлення</h2>
+  <div id="orders-container"></div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const container = document.getElementById("orders-container");
+  const orders = JSON.parse(localStorage.getItem("MY_ORDERS")) || [];
+
+  if (orders.length === 0) {
+    container.innerHTML = "<p>У вас ще немає замовлень 🍪</p>";
+    return;
+  }
+
+  orders.reverse().forEach((order, index) => {
+
+    let html = `
+      <div class="order-card">
+        <h3>Замовлення #${orders.length - index}</h3>
+        <p>Дата: ${order.date}</p>
+        <p>Сума: ${order.total} грн</p>
+        <div class="order-products">
+    `;
+
+    order.items.forEach(item => {
+
+      if(item.name === "HeartBox" && Array.isArray(item.items)) {
+        html += `
+          <p><strong>HeartBox</strong></p>
+          <p>Склад: ${item.items.join(", ")}</p>
+        `;
+      } else {
+        html += `<p>${item.name} × ${item.qty}</p>`;
+      }
+
+    });
+
+    html += `
+        </div>
+      </div>
+    `;
+
+    container.innerHTML += html;
+  });
+
+});
+</script>
+
+</body>
+</html>

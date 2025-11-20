@@ -17,7 +17,6 @@
     <a href="contact.html">Контакти</a>
     <a href="cart.html">🛒 Кошик</a>
     <a href="my-orders.html">📦 Мої замовлення</a>
-    
   </nav>
 </header>
 
@@ -26,13 +25,10 @@
 
   <div id="order-cart"></div>
 
-  <!-- ФОРМА -->
   <form id="order-form" action="https://formsubmit.co/heartmadecookies4@gmail.com" method="POST">
-
+    
     <input type="hidden" name="_subject" value="Нове замовлення з HeartMade Cookies!">
     <input type="hidden" name="_captcha" value="false">
-
-    <!-- ПОЛЕ КУДИ ЗАПИШЕМО КОШИК -->
     <input type="hidden" name="cart_data" id="cart-data">
 
     <label>Ім’я:
@@ -40,10 +36,10 @@
     </label>
 
     <label>Телефон:
-      <input type="tel" name="phone" placeholder="+380" required>
+      <input type="tel" name="phone" required>
     </label>
 
-    <label>Адреса (якщо самовивіз — залиште пустим):
+    <label>Адреса (самовивіз — залиш порожньо):
       <input type="text" name="address">
     </label>
 
@@ -60,118 +56,97 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const orderCart = document.getElementById("order-cart");
   const cartField = document.getElementById("cart-data");
+  const form = document.getElementById("order-form");
+
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   let total = 0;
 
-  // Відображення складу замовлення
+  // ======= Показ замовлення на сторінці =======
   if (cart.length === 0) {
     orderCart.innerHTML = "<p>Ваш кошик порожній 😢</p>";
   } else {
 
-cart.forEach(item => {
-  const div = document.createElement("div");
-  div.classList.add("cart-item");
+    cart.forEach(item => {
+      const div = document.createElement("div");
+      div.classList.add("cart-item");
 
-  // === HEARTBOX ===
-  if (item.name === "HeartBox") {
+      if (item.name === "HeartBox") {
+        const list = item.items || item.cookies || [];
 
-    const list = item.items || item.cookies || []; // ← працює в будь-якому випадку
+        div.innerHTML = `
+          <h3>HeartBox (4 шт)</h3>
+          <p><strong>Склад:</strong> ${list.length ? list.join(", ") : "Не вибрано"}</p>
+          <p>${item.price} грн × ${item.qty}</p>
+        `;
+      } else {
+        div.innerHTML = `
+          <h3>${item.name}</h3>
+          <p>${item.price} грн × ${item.qty}</p>
+        `;
+      }
 
-    div.innerHTML = `
-      <h3>HeartBox (4 шт)</h3>
-      <p><strong>Склад:</strong> ${list.length ? list.join(", ") : "— (не вибрано)"}</p>
-      <p><strong>Ціна:</strong> ${item.price} грн × ${item.qty}</p>
-    `;
-  }
-
-  // === ЗВИЧАЙНІ ПЕЧИВА ===
-  else {
-    div.innerHTML = `
-      <h3>${item.name}</h3>
-      <p>${item.price} грн × ${item.qty}</p>
-    `;
-  }
-
-  orderCart.appendChild(div);
-  total += item.price * item.qty;
-});
+      orderCart.appendChild(div);
+      total += item.price * item.qty;
+    });
 
     orderCart.innerHTML += `<h3>Загальна сума: ${total} грн</h3>`;
   }
 
-  // Формування даних для листа
-  document.getElementById("order-form").addEventListener("submit", function(e) {
+  // ======= Сабміт замовлення =======
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
 
-  e.preventDefault(); // ⛔ ЗУПИНЯЄМО форму
-
-  const name = document.querySelector("input[name='name']").value;
-  const phone = document.querySelector("input[name='phone']").value;
-  const address = document.querySelector("input[name='address']").value || "Самовивіз";
-
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-
-  //-------------------------------------------------
-  // ✅ Запис у MY_ORDERS (клієнт бачить тільки свої)
-  //-------------------------------------------------
-
-  const myOrders = JSON.parse(localStorage.getItem("MY_ORDERS")) || [];
-
-  myOrders.push({
-    name: name,
-    phone: phone,
-    address: address,
-    items: cart,
-    total: total,
-    date: new Date().toLocaleString()
-  });
-
-  // 🔥 Зберігаємо замовлення
-  localStorage.setItem("MY_ORDERS", JSON.stringify(myOrders));
-
-  //-------------------------------------------------
-  // ✅ Формуємо дані для formsubmit
-  //-------------------------------------------------
-
-  const cartFormatted = cart.map(item => {
-    if(item.name === "HeartBox" && Array.isArray(item.items)){
-      return `HeartBox: ${item.items.join(", ")}`;
-    } else {
-      return `${item.name} × ${item.qty}`;
+    if (cart.length === 0) {
+      alert("Кошик порожній!");
+      return;
     }
-  }).join("\n");
 
-  document.getElementById("cart-data").value =
-    cartFormatted + `\n\nСума: ${total} грн`;
+    const name = form.querySelector("input[name='name']").value;
+    const phone = form.querySelector("input[name='phone']").value;
+    const address = form.querySelector("input[name='address']").value || "Самовивіз";
 
-  //-------------------------------------------------
-  // ✅ Очищаємо кошик
-  //-------------------------------------------------
+    // ======= Текст замовлення для пошти =======
+    const formatted = cart.map(item => {
+      if (item.name === "HeartBox" && Array.isArray(item.items)) {
+        return `HeartBox: ${item.items.join(", ")}`;
+      }
+      return `${item.name} × ${item.qty}`;
+    }).join("\n");
 
-  localStorage.removeItem("cart");
+    cartField.value = formatted + `\n\nСума: ${total} грн`;
 
-  //-------------------------------------------------
-  // ✅ Через 300мс — відправляємо форму реально
-  //-------------------------------------------------
+    // ======= Зберігаємо в "Мої замовлення" =======
+    const myOrders = JSON.parse(localStorage.getItem("MY_ORDERS")) || [];
 
-  setTimeout(() => {
-    this.submit();
-  }, 300);
-});
+    myOrders.push({
+      name,
+      phone,
+      address,
+      items: cart,
+      total,
+      date: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("MY_ORDERS", JSON.stringify(myOrders));
+
+    // ======= Очищаємо кошик =======
+    localStorage.removeItem("cart");
+    localStorage.removeItem("checkout_cart");
+
+    document.getElementById("order-result").innerHTML = 
+      "✅ Замовлення збережено! Зараз воно буде надіслано на пошту.";
+
+    // ======= Відправка форми на пошту =======
+    setTimeout(() => {
+      form.submit();
+    }, 400);
+  });
 
 });
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-

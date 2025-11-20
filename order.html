@@ -17,6 +17,7 @@
     <a href="contact.html">Контакти</a>
     <a href="cart.html">🛒 Кошик</a>
     <a href="my-orders.html">📦 Мої замовлення</a>
+    
   </nav>
 </header>
 
@@ -102,48 +103,71 @@ cart.forEach(item => {
   }
 
   // Формування даних для листа
-  document.getElementById("order-form").addEventListener("submit", () => {
+  document.getElementById("order-form").addEventListener("submit", function(e) {
 
-    const formatted = cart.map(item => {
-      if (item.name === "HeartBox" && Array.isArray(item.items)) {
-        return `HeartBox (4 шт): ${item.items.join(", ")}`;
-      }
-      return `${item.name} × ${item.qty} = ${item.qty * item.price} грн`;
-    }).join("\n");
+  e.preventDefault(); // ⛔ ЗУПИНЯЄМО форму
 
-    cartField.value = `${formatted}\n\nЗагальна сума: ${total} грн`;
+  const name = document.querySelector("input[name='name']").value;
+  const phone = document.querySelector("input[name='phone']").value;
+  const address = document.querySelector("input[name='address']").value || "Самовивіз";
 
-    const allOrders = JSON.parse(localStorage.getItem("ALL_ORDERS")) || [];
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-allOrders.push({
-  name: document.querySelector("input[name='name']").value,
-  phone: document.querySelector("input[name='phone']").value,
-  address: document.querySelector("input[name='address']").value || "Самовивіз",
-  items: cart,
-  total: total,
-  date: new Date().toLocaleString()
-});
+  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
-localStorage.setItem("ALL_ORDERS", JSON.stringify(allOrders));
+  //-------------------------------------------------
+  // ✅ Запис у MY_ORDERS (клієнт бачить тільки свої)
+  //-------------------------------------------------
 
-    // Очищення після відправлення
-    setTimeout(() => {
-      localStorage.removeItem("cart");
-      localStorage.removeItem("checkout_cart");
-    }, 500);
+  const myOrders = JSON.parse(localStorage.getItem("MY_ORDERS")) || [];
 
+  myOrders.push({
+    name: name,
+    phone: phone,
+    address: address,
+    items: cart,
+    total: total,
+    date: new Date().toLocaleString()
   });
+
+  // 🔥 Зберігаємо замовлення
+  localStorage.setItem("MY_ORDERS", JSON.stringify(myOrders));
+
+  //-------------------------------------------------
+  // ✅ Формуємо дані для formsubmit
+  //-------------------------------------------------
+
+  const cartFormatted = cart.map(item => {
+    if(item.name === "HeartBox" && Array.isArray(item.items)){
+      return `HeartBox: ${item.items.join(", ")}`;
+    } else {
+      return `${item.name} × ${item.qty}`;
+    }
+  }).join("\n");
+
+  document.getElementById("cart-data").value =
+    cartFormatted + `\n\nСума: ${total} грн`;
+
+  //-------------------------------------------------
+  // ✅ Очищаємо кошик
+  //-------------------------------------------------
+
+  localStorage.removeItem("cart");
+
+  //-------------------------------------------------
+  // ✅ Через 300мс — відправляємо форму реально
+  //-------------------------------------------------
+
+  setTimeout(() => {
+    this.submit();
+  }, 300);
+});
 
 });
 </script>
 
 </body>
 </html>
-
-
-
-
-
 
 
 

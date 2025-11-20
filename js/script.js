@@ -497,6 +497,19 @@ document.addEventListener("DOMContentLoaded", () => {
     // Записуємо в приховане поле форми
     cartField.value = output;
 
+    const allOrders = JSON.parse(localStorage.getItem("ALL_ORDERS")) || [];
+
+allOrders.push({
+  name,
+  phone,
+  address,
+  items: cart,
+  total,
+  date: new Date().toLocaleString()
+});
+
+localStorage.setItem("ALL_ORDERS", JSON.stringify(allOrders));
+
     // Очистити кошики
     setTimeout(() => {
       localStorage.removeItem("cart");

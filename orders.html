@@ -17,12 +17,12 @@
   </nav>
 </header>
 
-<section class="container">
+<section class="orders-section">
   <h2>🧾 Перегляд замовлень</h2>
 
   <div id="orders-list"></div>
 
-  <button id="clear-orders" class="btn" style="margin-top:20px;">Очистити всі замовлення</button>
+  <button id="clear-orders" class="clear-orders-btn">Очистити всі замовлення</button>
 </section>
 
 <script>
@@ -38,15 +38,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   orders.reverse().forEach((order, index) => {
 
-    let html = `
-      <div style="border:1px solid #ddd; padding:15px; border-radius:10px; margin-bottom:15px;">
-        <h3>Замовлення #${orders.length - index}</h3>
-        <p><strong>Імʼя:</strong> ${order.name}</p>
-        <p><strong>Телефон:</strong> ${order.phone}</p>
-        <p><strong>Адреса:</strong> ${order.address}</p>
-        <p><strong>Дата:</strong> ${order.date}</p>
-        <hr>
-    `;
+let html = `
+  <div class="order-card">
+    <h3>Замовлення #${orders.length - index}</h3>
+    <p><strong>Імʼя:</strong> ${order.name}</p>
+    <p><strong>Телефон:</strong> ${order.phone}</p>
+    <p><strong>Адреса:</strong> ${order.address}</p>
+    <p class="order-date">Дата: ${order.date}</p>
+
+    <div class="order-products">
+`;
 
     order.items.forEach(item => {
 
@@ -60,10 +61,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    html += `
-        <p><strong>Сума:</strong> ${order.total} грн</p>
-      </div>
-    `;
+   html += `
+    </div>
+    <div class="order-total">Загальна сума: ${order.total} грн</div>
+  </div>
+`;
 
     ordersContainer.innerHTML += html;
   });

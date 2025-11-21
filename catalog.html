@@ -7,20 +7,23 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <h1 class="logo">🍪 HeartMade Cookies</h1>
-      <nav class="nav">
-        <a href="index.html">Головна</a>
-        <a href="catalog.html" class="active">Каталог</a>
-        <a href="about.html">Про нас</a>
-        <a href="contact.html">Контакти</a>
-        <a href="cart.html" class="cart-btn">🛒 Кошик</a>
-        <a href="my-orders.html">📦 Мої замовлення</a>
-      </nav>
-    </div>
-  </header>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">🍪 HeartMade</a>
 
+    <div class="dropdown">
+      <button class="dropbtn">Меню ▾</button>
+      <div class="dropdown-content">
+        <a href="index.html">🏠 Головна</a>
+        <a href="catalog.html">📦 Каталог</a>
+        <a href="about.html">ℹ️ Про нас</a>
+        <a href="contact.html">📞 Контакти</a>
+        <a href="cart.html">🛒 Кошик</a>
+        <a href="my-orders.html">📬 Мої замовлення</a>
+      </div>
+    </div>
+  </div>
+</header>
   <section class="catalog-section fade-in">
     <h2>Каталог печива</h2>
     <div class="divider"></div>
@@ -109,6 +112,7 @@ document.querySelectorAll(".details-btn").forEach(btn => {
 </body>
 
 </html>
+
 
 
 

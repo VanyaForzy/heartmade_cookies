@@ -447,7 +447,7 @@ confirmHB.addEventListener("click", () => {
 
   cart.push({
       name: "HeartBox",
-      price: 220,
+      price: 200,
       img: "images/box.jpg",
       items: itemsArray,     // ← ТЕПЕР ЦЕ МАСИВ!
       qty: 1
@@ -518,6 +518,7 @@ localStorage.setItem("ALL_ORDERS", JSON.stringify(allOrders));
   });
 
 });
+
 
 
 

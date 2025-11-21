@@ -996,3 +996,97 @@ body {
     height: auto;
   }
 }
+
+.site-header {
+  background: #3b005a;
+  height: 60px;  /* менша висота */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+.header-inner {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Логотип */
+.logo {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* Випадаюче меню */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Кнопка меню */
+.dropbtn {
+  background: #5d008f;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s ease;
+}
+
+.dropbtn:hover {
+  background: #7c20b6;
+}
+
+/* Контент меню */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background: #1b0026;
+  min-width: 180px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  z-index: 999;
+}
+
+/* Посилання */
+.dropdown-content a {
+  color: white;
+  padding: 10px 14px;
+  display: block;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.dropdown-content a:hover {
+  background: #5d008f;
+}
+
+/* Показ при наведенні */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .site-header {
+    height: 50px;
+  }
+
+  .logo {
+    font-size: 16px;
+  }
+
+  .dropbtn {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}

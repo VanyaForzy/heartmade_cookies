@@ -1007,8 +1007,8 @@ body {
   background: #3b005a;
   height: 60px;  /* менша висота */
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: right;
+  justify-content: right;
   padding: 0 10px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.4);
 }
@@ -1111,13 +1111,13 @@ body {
 }
 
 .logo-img {
-  width: 40px;
-  height: 40px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
 }
 
 .logo-text {
-  font-size: 18px;
+  font-size: 28px;
   font-weight: bold;
   color: white;
   text-decoration: none;
@@ -1138,3 +1138,4 @@ body {
 .logo-area {
   margin-right: auto;
 }
+
